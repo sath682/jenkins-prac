@@ -14,6 +14,11 @@ pipeline {
       steps {
         echo 'Running tests'
       }
+      stage('List Files') {
+  steps {
+    bat 'dir'
+  }
+}
     }
     stage('Deploy') {
       steps {
