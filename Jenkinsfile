@@ -1,33 +1,24 @@
 pipeline {
   agent any
   environment {
-    APP_NAME = 'demo-app'
+    IMAGE = 'sathw77/jenkins-demo'
   }
   stages {
-    stage('Build') {
+    stage('Build Image') {
       steps {
-        echo "Building ${APP_NAME}"
-        bat 'echo build number is %BUILD_NUMBER%'
+        bat 'docker build -t %IMAGE%:%BUILD_NUMBER% .'
       }
     }
-    stage('Test') {
+    stage('Push Image') {
       steps {
-        echo 'Running tests deploy v2'
-      }
-    }
-    stage('List Files') {
-      steps {
-        bat 'dir'
-      }
-    }
-    stage('Deploy') {
-      steps {
-        echo 'Deploying to '
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
+          bat 'echo %DH_PASS%| docker login -u %DH_USER% --password-stdin'
+          bat 'docker push %IMAGE%:%BUILD_NUMBER%'
+        }
       }
     }
   }
   post {
-    success { echo 'Pipeline passed' }
-    failure { echo 'Pipeline failed' }
+    always { bat 'docker logout' }
   }
 }
