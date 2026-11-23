@@ -12,7 +12,7 @@ pipeline {
     }
     stage('Test') {
       steps {
-        echo 'Running tests'
+        echo 'Running tests deploy v2'
       }
     }
     stage('List Files') {
@@ -22,7 +22,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        echo 'Deploying'
+        echo 'Deploying to '
       }
     }
   }
