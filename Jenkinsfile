@@ -19,6 +19,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
           bat 'echo %DH_PASS%| docker login -u %DH_USER% --password-stdin'
           bat 'docker push %IMAGE%:%BUILD_NUMBER%'
+          // Poll SCM test
         }
       }
     }
