@@ -9,6 +9,11 @@ pipeline {
         bat 'docker build -t %IMAGE%:%BUILD_NUMBER% .'
       }
     }
+    stage('Scan Image') {
+      steps {
+        bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 %IMAGE%:%BUILD_NUMBER%'
+      }
+    }
     stage('Push Image') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
